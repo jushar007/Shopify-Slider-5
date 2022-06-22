@@ -1,0 +1,235 @@
+{{ 'slick.css' | asset_url | stylesheet_tag }}
+{{ 'jushar-slider-5.css' | asset_url | stylesheet_tag }}
+{{ 'animate.min.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'slick.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'slick-animation.min.js' | asset_url }}"></script>
+<div class="jushar_slider_5_dev">
+  <div class="js_5s page-width">
+  	{% for block in section.blocks %}
+    <div class="slider">
+    	<div class="row">
+          <div class="col-sm-3">
+            <div class="js5s_left animated" data-animation-in="{{ block.settings.animation_left }}" data-delay-in="0.3">
+              {% if block.settings.heading_titl != blank %}
+              	<div class="h1">{{ block.settings.heading_titl }}</div>
+              {% endif %}
+              {% if block.settings.heading_desc != blank %}
+              	<p>{{ block.settings.heading_desc }}</p>
+              {% endif %}
+              {% if block.settings.url or block.settings.buttone_title != blank %}
+              <a href="{{ block.settings.url }}" style="color:{{ block.settings.buttone_color }}; background:{{ block.settings.buttone_bg }};" class="ifr_{{ forloop.index }} button" target="iframe_a">{{ block.settings.buttone_title }}</a>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            {% if block.settings.bg_image != blank %}
+            <img src="" alt="" data-lazy="{{ block.settings.bg_image | image_url }}" class="full-image animated" data-animation-in="zoomInImage"/>
+            {% endif %}
+          </div>
+          <div class="col-sm-3">
+          	{% assign article = articles[block.settings.blogPost] %}
+            
+            {% if article %}
+            	<div class="js5s_article animated" data-animation-in="{{ block.settings.animation_right }}" data-delay-in="0.3">
+                  <div  title="Featured Journal Post" class="middle-parallax vertical-center bg-cover hidden-xs" style="background-image: url('{{ article.image.src | image_url }}')">
+                    <div class="vertical-center-inner">
+                      <div class="middle-parallax-content text-center">
+                        <h2>{{ article.title | upcase }}</h2>
+                        <a href="{{ article.url }}" style="color:{{ block.settings.buttone_color }}; background:{{ block.settings.buttone_bg }};" class="button">{{ block.settings.button_text | upcase }}</a>
+                      </div>
+                    </div>
+                  </div>
+            	</div>
+            {% endif %}
+          </div>
+    	</div>
+      	<div class="iframe_{{ forloop.index }} iframe">
+        <div class="js_5s_close">{% render 'icon-close' %}</div>
+    	<iframe src="demo_iframe.htm" name="iframe_a" height="600px" width="100%" title="Iframe Example"></iframe>
+      	</div>
+        <style>
+          
+      	</style>
+        <script>
+          $( document ).ready(function() {
+            $(".ifr_{{ forloop.index }}").click(function(){
+              $(".iframe_{{ forloop.index }}").addClass("active");
+            });
+            $(".js_5s_close").click(function(){
+              $(".iframe_{{ forloop.index }}").removeClass("active");
+            });
+          });
+        </script>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<script>
+$( document ).ready(function() {
+$('.js_5s').slick({
+    autoplay: false,
+    speed: 800,
+    lazyLoad: 'progressive',
+    arrows: true,
+    dots: false,
+	prevArrow: '<div class="slick-nav prev-arrow"><i></i><svg><use xlink:href="#circle"></svg></div>',
+	nextArrow: '<div class="slick-nav next-arrow"><i></i><svg><use xlink:href="#circle"></svg></div>',
+  }).slickAnimation();
+  
+  $('.slick-nav').on('click touch', function(e) {
+
+    e.preventDefault();
+
+    var arrow = $(this);
+
+    if(!arrow.hasClass('animate')) {
+        arrow.addClass('animate');
+        setTimeout(() => {
+            arrow.removeClass('animate');
+        }, 1600);
+    }
+
+  });
+});
+</script>
+{% schema %}
+  {
+    "name": "Jushar Slider 5",
+	"tag": "section",
+	"class": "section",
+	"max_blocks": 3,
+    "settings": [
+	
+	],
+	"blocks": [
+        {
+          "type": "column",
+          "name": "Jushar Slider 5",
+          "settings": [
+            {
+              "type": "image_picker",
+              "id": "bg_image",
+              "label": "Background image"
+            },
+			{
+			  "type": "text",
+			  "id": "heading_titl",
+			  "label": "Slider Heading",
+			  "default": "Home Is Where My Plants Are"
+			},
+			{
+			  "type": "text",
+			  "id": "heading_desc",
+			  "label": "Slider desc",
+			  "default": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book"
+			},
+			{
+              "type": "select",
+              "id": "animation_left",
+              "options": [
+                {
+                  "value": "fadeInUp",
+                  "label": "fadeInUp"
+                },
+                {
+                  "value": "fadeInLeft",
+                  "label": "fadeInLeft"
+                },
+                {
+                  "value": "fadeInRight",
+                  "label": "fadeInRight"
+                }
+              ],
+              "default": "fadeInLeft",
+              "label": "select text animation",
+              "info": "slider animations"
+            },
+			{
+              "type": "header",
+              "content": "button"
+            },
+			{
+			  "type": "text",
+			  "id": "buttone_title",
+			  "label": "Buttone text",
+			  "default": "Play Video"
+			},
+			{
+			  "type": "url",
+			  "id": "url",
+			  "label": "Buttone url"
+			},
+			{
+			  "type": "color",
+			  "id": "buttone_color",
+			  "label": "Select buttone text color",
+			  "default": "#ffffff"
+			},
+			{
+			  "type": "color",
+			  "id": "buttone_bg",
+			  "label": "Select buttone background color",
+			  "default": "#111111"
+			},
+			{
+              "type": "header",
+              "content": "Right Side content"
+            },
+			{
+              "type": "article",
+              "id": "blogPost",
+              "label": "Blog article"
+            },
+            {
+              "type": "header",
+              "content": "Button Settings"
+            },
+            {
+              "type": "text",
+              "id": "button_text",
+              "label": "Button Text",
+              "default": "View Blog"
+            },
+			{
+              "type": "select",
+              "id": "animation_right",
+              "options": [
+                {
+                  "value": "fadeInUp",
+                  "label": "fadeInUp"
+                },
+                {
+                  "value": "fadeInLeft",
+                  "label": "fadeInLeft"
+                },
+                {
+                  "value": "fadeInRight",
+                  "label": "fadeInRight"
+                }
+              ],
+              "default": "fadeInRight",
+              "label": "select text animation",
+              "info": "slider animations"
+            }
+  			
+          ]
+        }
+    ],
+	"presets": [
+      {
+        "name": "Jushar Slider 5",
+        "blocks": [
+          {
+            "type": "column"
+          }
+        ]
+      }
+    ]	
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
